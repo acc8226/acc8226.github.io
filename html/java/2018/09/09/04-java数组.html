@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"DNTEG3O773","apiKey":"dbae86bf58ba49b0e9f250a3983ac7ff","indexName":"likaiailei","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="在计算机语言中数组是非常重要的集合类型，大部分计算机语言中数组具有如下三个基本特性：  一致性：数组只能保存相同数据类型元素，元素的数据类型可以是任何相同的数据类型。 有序性：数组中的元素是有序的，通过下标访问。 不可变性：数组一旦初始化，则长度（数组中预分配的元素个数）不可变。 一维数组: 声明数组,创建数组空间,初始化三步.  格式1： 元素类型[]  数组名(推荐采用) ;格式2： 元素类型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="04 Java数组">
+<meta property="og:url" content="/html/java/2018/09/09/04-java数组.html">
+<meta property="og:site_name" content="ac86&#39;s blog">
+<meta property="og:description" content="在计算机语言中数组是非常重要的集合类型，大部分计算机语言中数组具有如下三个基本特性：  一致性：数组只能保存相同数据类型元素，元素的数据类型可以是任何相同的数据类型。 有序性：数组中的元素是有序的，通过下标访问。 不可变性：数组一旦初始化，则长度（数组中预分配的元素个数）不可变。 一维数组: 声明数组,创建数组空间,初始化三步.  格式1： 元素类型[]  数组名(推荐采用) ;格式2： 元素类型">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-4087e8f4537c5156.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-e1054034bc816264.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1662509-961f0a169874ae4c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-03-04T15:59:09.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="04 Java数组">
+<meta name="twitter:description" content="在计算机语言中数组是非常重要的集合类型，大部分计算机语言中数组具有如下三个基本特性：  一致性：数组只能保存相同数据类型元素，元素的数据类型可以是任何相同的数据类型。 有序性：数组中的元素是有序的，通过下标访问。 不可变性：数组一旦初始化，则长度（数组中预分配的元素个数）不可变。 一维数组: 声明数组,创建数组空间,初始化三步.  格式1： 元素类型[]  数组名(推荐采用) ;格式2： 元素类型">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/1662509-4087e8f4537c5156.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="/html/java/2018/09/09/04-java数组.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>04 Java数组 | ac86's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ac86's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">---</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/acc8226" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="/html/java/2018/09/09/04-java数组.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="leiTKai">
+      <meta itemprop="description" content="personal website">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ac86's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          04 Java数组
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 20:18:36" itemprop="dateCreated datePublished" datetime="2018-09-09T20:18:36+08:00">2018-09-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-04 23:59:09" itemprop="dateModified" datetime="2020-03-04T23:59:09+08:00">2020-03-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在计算机语言中数组是非常重要的集合类型，大部分计算机语言中数组具有如下三个基本特性：</p>
+<ol>
+<li>一致性：数组只能保存<strong>相同数据类型</strong>元素，元素的数据类型可以是任何相同的数据类型。</li>
+<li>有序性：数组中的元素是有序的，通过下标访问。</li>
+<li><p>不可变性：数组一旦初始化，则<strong>长度（数组中预分配的元素个数）不可变</strong>。</p>
+<h2 id="一维数组-声明数组-创建数组空间-初始化三步"><a href="#一维数组-声明数组-创建数组空间-初始化三步" class="headerlink" title="一维数组: 声明数组,创建数组空间,初始化三步."></a>一维数组: 声明数组,创建数组空间,初始化三步.</h2></li>
+</ol>
+<p>格式1： 元素类型[]  数组名(推荐采用) ;<br>格式2： 元素类型  数组名[] ;<br> 其中，数组元素的类型可以是基本类型，也可以是类或接口。   </p>
+<h3 id="数组初始化"><a href="#数组初始化" class="headerlink" title="数组初始化"></a>数组初始化</h3><p>声明完成就要对数组进行初始化，数组初始化的过程就是为数组每一个元素分配内存空间，并为每一个元素提供初始值。初始化之后数组的长度就确定下来不能再变化了。 </p>
+<p>数组初始化可以分为静态初始化和动态初始化。</p>
+<h4 id="静态初始化"><a href="#静态初始化" class="headerlink" title="静态初始化"></a>静态初始化</h4><p>静态初始化就是<strong>将数组的元素放到大括号中</strong>，元素之间用逗号（,）分隔。<br>使用场景: 在已知数组的每一个元素内容情况下使用的，这样一次到位。<br>示例代码如下：<code>String[] strArray = {&quot;张三&quot;,&quot;李四&quot;,&quot;王五&quot;}; //静态初始化Stirng数组</code></p>
+<h4 id="动态初始化"><a href="#动态初始化" class="headerlink" title="动态初始化"></a>动态初始化</h4><p>动态初始化使用new运算符分配指定长度的内存空间，<br>语法如下：<code>new 元素数据类型[数组长度] ;</code></p>
+<p>new分配数组内存空间后，不同类型都会有默认值，如下图。<br><img src="https://upload-images.jianshu.io/upload_images/1662509-4087e8f4537c5156.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据类型默认值"></p>
+<h2 id="多维数组"><a href="#多维数组" class="headerlink" title="多维数组"></a>多维数组</h2><h3 id="二维数组声明"><a href="#二维数组声明" class="headerlink" title="二维数组声明"></a>二维数组声明</h3><p>当数组中每个元素又可以带有多个下标时，这种数组就是“多维数组”。<br>Java中声明二维数组需要有两个中括号，具体有三种语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">元素数据类型[][] 数组变量名;</span><br><span class="line">元素数据类型 数组变量名[][];</span><br><span class="line">元素数据类型[] 数组变量名[];</span><br></pre></td></tr></table></figure></p>
+<h3 id="二维数组的初始化"><a href="#二维数组的初始化" class="headerlink" title="二维数组的初始化"></a>二维数组的初始化</h3><p>二维数组的初始化也可以分为静态初始化和动态初始化。</p>
+<h4 id="静态初始化-1"><a href="#静态初始化-1" class="headerlink" title="静态初始化"></a>静态初始化</h4><p><code>int intArray[][] = { { 1, 2, 3 }, { 11, 12, 13 }, { 21, 22, 23 }, { 31, 32, 33 } };</code></p>
+<blockquote>
+<p>提示　严格意义上说Java中并不存在真正意义上的多维数组，只是一维数组，不过数组中的元素也是数组，以此类推三维数组就是数组的数组的数组了，例如{ { {1, 2}, {3} }, { {21}, {22, 23} } }表示一个三维数组。</p>
+</blockquote>
+<h4 id="动态初始化-1"><a href="#动态初始化-1" class="headerlink" title="动态初始化"></a>动态初始化</h4><p>语法: <code>new 元素数据类型[高维数组长度] [低维数组长度] ;</code></p>
+<h2 id="3-不规则数组"><a href="#3-不规则数组" class="headerlink" title="3. 不规则数组"></a>3. 不规则数组</h2><p>由于Java多维数组是数组的数组，因此会衍生出一种不规则数组<br>动态初始化不规则数组比较麻烦，不能使用new int[4][3]语句，而是先初始化高维数组，然后再分别逐个初始化低维数组。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> intArray[][] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">4</span>][]; <span class="comment">//先初始化高维数组为4</span></span><br><span class="line"><span class="comment">//逐一初始化低维数组</span></span><br><span class="line">intArray[<span class="number">0</span>] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">intArray[<span class="number">1</span>] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">1</span>];</span><br><span class="line">intArray[<span class="number">2</span>] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">3</span>];</span><br><span class="line">intArray[<span class="number">3</span>] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">3</span>];</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1662509-e1054034bc816264.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h2 id="4-其它"><a href="#4-其它" class="headerlink" title="4. 其它"></a>4. 其它</h2><p> <img src="http://upload-images.jianshu.io/upload_images/1662509-961f0a169874ae4c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数组的内存结构"></p>
+<p>数组中常见的Exception:</p>
+<ul>
+<li>访问到不存在的角标: ArrayIndexOutOfBoundsException　　</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/html/java/2018/09/09/03-java流程控制语句.html" rel="prev" title="03 Java流程控制语句">
+      <i class="fa fa-chevron-left"></i> 03 Java流程控制语句
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/html/java/2018/09/09/05-类和对象.html" rel="next" title="05 类和对象">
+      05 类和对象 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一维数组-声明数组-创建数组空间-初始化三步"><span class="nav-number">1.</span> <span class="nav-text">一维数组: 声明数组,创建数组空间,初始化三步.</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数组初始化"><span class="nav-number">1.1.</span> <span class="nav-text">数组初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#静态初始化"><span class="nav-number">1.1.1.</span> <span class="nav-text">静态初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态初始化"><span class="nav-number">1.1.2.</span> <span class="nav-text">动态初始化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多维数组"><span class="nav-number">2.</span> <span class="nav-text">多维数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二维数组声明"><span class="nav-number">2.1.</span> <span class="nav-text">二维数组声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二维数组的初始化"><span class="nav-number">2.2.</span> <span class="nav-text">二维数组的初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#静态初始化-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">静态初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态初始化-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">动态初始化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-不规则数组"><span class="nav-number">3.</span> <span class="nav-text">3. 不规则数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-其它"><span class="nav-number">4.</span> <span class="nav-text">4. 其它</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">leiTKai</p>
+  <div class="site-description" itemprop="description">personal website</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leiTKai</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

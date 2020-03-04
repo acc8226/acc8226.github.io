@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"DNTEG3O773","apiKey":"dbae86bf58ba49b0e9f250a3983ac7ff","indexName":"likaiailei","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摘要： 1:Maven目录分析 bin：含有mvn运行的脚本 boot：含有plexus-classworlds类加载器框架 conf：含有settings.xml配置文件 lib：含有Maven运行时所需要的java类库 Settings.  1234567891011121314151617181920212223242526272829303132333435363738394041424">
+<meta property="og:type" content="article">
+<meta property="og:title" content="maven起步">
+<meta property="og:url" content="/html/maven/2018/08/25/maven起步.html">
+<meta property="og:site_name" content="ac86&#39;s blog">
+<meta property="og:description" content="摘要： 1:Maven目录分析 bin：含有mvn运行的脚本 boot：含有plexus-classworlds类加载器框架 conf：含有settings.xml配置文件 lib：含有Maven运行时所需要的java类库 Settings.  1234567891011121314151617181920212223242526272829303132333435363738394041424">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-9bc3a2cb1caf8f29.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-d1e6d116b7922048.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-08-28T00:05:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="maven起步">
+<meta name="twitter:description" content="摘要： 1:Maven目录分析 bin：含有mvn运行的脚本 boot：含有plexus-classworlds类加载器框架 conf：含有settings.xml配置文件 lib：含有Maven运行时所需要的java类库 Settings.  1234567891011121314151617181920212223242526272829303132333435363738394041424">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/1662509-9bc3a2cb1caf8f29.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="/html/maven/2018/08/25/maven起步.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>maven起步 | ac86's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ac86's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">---</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/acc8226" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="/html/maven/2018/08/25/maven起步.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="leiTKai">
+      <meta itemprop="description" content="personal website">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ac86's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          maven起步
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-08-25 22:33:07" itemprop="dateCreated datePublished" datetime="2018-08-25T22:33:07+08:00">2018-08-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-08-28 08:05:00" itemprop="dateModified" datetime="2018-08-28T08:05:00+08:00">2018-08-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/maven/" itemprop="url" rel="index"><span itemprop="name">maven</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>摘要： 1:Maven目录分析 bin：含有mvn运行的脚本 boot：含有plexus-classworlds类加载器框架 conf：含有settings.xml配置文件 lib：含有Maven运行时所需要的java类库 Settings.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">1:Maven目录分析</span><br><span class="line">    bin：含有mvn运行的脚本</span><br><span class="line">    boot：含有plexus-classworlds类加载器框架</span><br><span class="line">    conf：含有settings.xml配置文件</span><br><span class="line">    lib：含有Maven运行时所需要的java类库</span><br><span class="line">    Settings.xml 中默认的用户库: $&#123;user.home&#125;/.m2/repository[通过maven下载的jar包都会存储到指定的个人仓库中]</span><br><span class="line">    Maven默认仓库下载地址在: maven的lib目录下maven-model-builder-3.0.4.jar的pom.xml中</span><br><span class="line">2：创建目录结构：</span><br><span class="line">　　Hello</span><br><span class="line"> 　　--src   </span><br><span class="line"> 　　-----main</span><br><span class="line"> 　　----------java       --用来存放Java文件</span><br><span class="line"> 　　----------resources   --用来存放资源文件</span><br><span class="line"> 　　-----test</span><br><span class="line"> 　　---------java        --用来存放测试的Java文件</span><br><span class="line"> 　　---------resources</span><br><span class="line"> 　　--target           --项目输出位置,编译完毕后自动生成</span><br><span class="line"> 　　--pom.xml        -- 项目对象模型的描述 ，它是maven配置的核心</span><br><span class="line">3:建立pom.xml模板：</span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">  &lt;!-- 当前pom的版本号 --&gt;</span><br><span class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">  &lt;!-- groupId: 当前jar所属的命名空间 --&gt;</span><br><span class="line">  &lt;groupId&gt;cn.bie.maven&lt;/groupId&gt;</span><br><span class="line">  &lt;!-- 当前项目模块名称 --&gt;</span><br><span class="line">  &lt;artifactId&gt;Hello&lt;/artifactId&gt;</span><br><span class="line">  &lt;!-- 当前项目的版本, SNAPSHOT镜像版 --&gt;</span><br><span class="line">  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</span><br><span class="line">    &lt;!-- 当前模块需要依赖的相关jar包,也称为依赖管理, 所有被依赖的包都是通过&quot;坐标&quot;定位的 --&gt;</span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;!-- 需要依赖junit 通过 groupId+artifactId+version来查找,如果本地没有则到中央仓库下载 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;!-- 当前jar所属的命名空间 --&gt;</span><br><span class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">            &lt;!-- 依赖的项目模块的名称 --&gt;</span><br><span class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">            &lt;!-- 依赖的版本号 --&gt;</span><br><span class="line">            &lt;version&gt;4.9&lt;/version&gt;</span><br><span class="line">            &lt;!-- 依赖的范围, 有 test compile privlege。test依赖的jar包的使用范围，当测试的时候使用该jar包，正式发布，删除这个 --&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;        </span><br><span class="line">    &lt;/dependencies&gt;</span><br><span class="line">&lt;/project&gt;</span><br><span class="line">4:Maven核心概念：</span><br><span class="line">　　4.1：Maven插件</span><br><span class="line">　　　　Maven的核心仅仅定义了抽象的生命周期，具体的任务都是交由插件完成的每个插件都能实现多个功能，每个功能就是一个插件目标</span><br><span class="line">　　　　Maven的生命周期与插件目标相互绑定，以完成某个具体的构建任务, Maven的插件在: .m2\repository\org\apache\maven\plugins</span><br><span class="line">　　4.2：Maven坐标</span><br><span class="line">　　　　类似在平面几何中坐标（x,y）可以标识平面中唯一的一点, Maven世界拥有大量构建，我们需要找一个用来唯一标识一个构建的统一规范</span><br><span class="line">　　　　拥有了统一规范，就可以把查找工作交给机器</span><br><span class="line">　　　　　　groupId：定义当前Maven项目隶属项目  (实际对应JAVA的包的结构, 是main目录里java的目录结构)</span><br><span class="line">　　　　　　artifactId：定义实际项目中的一个模块(项目的唯一的标识符,实际对应项目的名称,就是项目根目录的名称)</span><br><span class="line">　　　　　　version：定义当前项目的当前版本</span><br><span class="line">　　4.3：Maven仓库</span><br><span class="line">　　　　何为Maven仓库：用来统一存储所有Maven共享构建的位置就是仓库</span><br><span class="line">　　　　Maven配置jar包的路径为：groupId/artifactId/version/artifactId-version</span><br><span class="line">　　　　本地仓库(~/.m2/repository/)：每个用户只有一个本地仓库</span><br><span class="line">　　　　中央仓库(Maven默认的远程仓库)：Maven默认的远程仓库下载地址为：http://repo1.maven.org/maven2</span><br><span class="line">　　　　私服：是一种特殊的远程仓库, 它是架设在局域网内的仓库, 主要是为了团队协作开发</span><br><span class="line">　　　　镜像：用来替代中央仓库, 速度一般比中央仓库快</span><br><span class="line">　　4.4：软件构建生命周期,maven软件构建的生命周期</span><br><span class="line">　　　　　　清除--&gt; 编译--&gt;测试--&gt;报告--&gt;打包（jar\war）--&gt;安装--&gt;部署。</span><br><span class="line">　　　　 maven生命周期命令插件（命令：mvn clean）：clean--compile--test--package--install-deploy。</span><br><span class="line">　　　　 maven坐标：maven通过坐标的概念来唯一标识jar包或者war包</span><br></pre></td></tr></table></figure>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li>官网<a href="http://maven.apache.org/" target="_blank" rel="noopener">http://maven.apache.org/</a></li>
+</ul>
+<p>找到Download，然后找到下图箭头所示的apache-maven-3.5.0-bin.zip；</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1662509-9bc3a2cb1caf8f29.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<ul>
+<li>配置环境变量<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">M2_HOME=/path/to/maven/root</span><br><span class="line">PATH=$PATH$;$M2_HOME/bin</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/1662509-d1e6d116b7922048.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Windows下的配置"></p>
+<h2 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h2><p>groupId 组织<br>artifactId 项目标识符 // 尽量不用点号<br>version 版本<br>// 前三者成为一个项目的坐标<br>package 类型 //war, jar 或者其他</p>
+<p><code>mvn archetype:generate</code> 使用一个模板生成项目<br><code>mvn compile</code> 编辑源代码<br><code>mvn test</code> 跑单元测试<br><code>mvn package</code> 打包<br><code>mvn deploy</code> 部署<br><code>mvn site</code> 生成站点<br><code>mvn clean</code> 清理<br><code>mvn install</code></p>
+<h2 id="Tomcat插件"><a href="#Tomcat插件" class="headerlink" title="Tomcat插件"></a>Tomcat插件</h2><p>详细帮助<br><code>mvn help:describe -Dplugin=tomcat7</code></p>
+<p>使用带groupId的全限定名，例子如下：<br><code>mvn help:describe -Dplugin=org.apache.tomcat.maven:tomcat7-maven-plugin:2.2</code></p>
+<p>然后第一次使用, 输出这样的日志<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">[INFO] org.apache.tomcat.maven:tomcat7-maven-plugin:2.2</span><br><span class="line"></span><br><span class="line">Name: Apache Tomcat Maven Plugin :: Tomcat 7.x</span><br><span class="line">Description: The Tomcat Maven Plugin provides goals to manipulate WAR</span><br><span class="line">  projects within the Tomcat 7.x servlet container.</span><br><span class="line">Group Id: org.apache.tomcat.maven</span><br><span class="line">Artifact Id: tomcat7-maven-plugin</span><br><span class="line">Version: 2.2</span><br><span class="line">Goal Prefix: tomcat7</span><br><span class="line"></span><br><span class="line">This plugin has 14 goals:</span><br><span class="line"></span><br><span class="line">tomcat7:deploy</span><br><span class="line">  Description: Deploy a WAR to Tomcat.</span><br><span class="line"></span><br><span class="line">tomcat7:deploy-only</span><br><span class="line">  Description: Deploy a WAR to Tomcat without forking the package lifecycle.</span><br><span class="line"></span><br><span class="line">tomcat7:exec-war</span><br><span class="line">  Description: Create a self executable jar file containing all necessary</span><br><span class="line">    Apache Tomcat classes. This allows for using just java -jar mywebapp.jar to</span><br><span class="line">    run your webapp without needing to install a Tomcat instance. More details</span><br><span class="line">    here.</span><br><span class="line"></span><br><span class="line">tomcat7:exec-war-only</span><br><span class="line">  Description: Same as exec-war goal without forking the package lifecycle.</span><br><span class="line"></span><br><span class="line">tomcat7:help</span><br><span class="line">  Description: Display help information on tomcat7-maven-plugin.</span><br><span class="line">    Call mvn tomcat7:help -Ddetail=true -Dgoal=&lt;goal-name&gt; to display parameter</span><br><span class="line">    details.</span><br><span class="line"></span><br><span class="line">tomcat7:redeploy</span><br><span class="line">  Description: Redeploy a WAR in Tomcat. (Alias for the deploy goal with its</span><br><span class="line">    update parameter set to true.)</span><br><span class="line"></span><br><span class="line">tomcat7:redeploy-only</span><br><span class="line">  Description: Redeploy a WAR in Tomcat without forking the package</span><br><span class="line">    lifecycle. (Alias for the deploy-only goal with its update parameter set to</span><br><span class="line">    true.)</span><br><span class="line"></span><br><span class="line">tomcat7:run</span><br><span class="line">  Description: Runs the current project as a dynamic web application using an</span><br><span class="line">    embedded Tomcat server.</span><br><span class="line"></span><br><span class="line">tomcat7:run-war</span><br><span class="line">  Description: Runs the current project as a packaged web application using</span><br><span class="line">    an embedded Tomcat server.</span><br><span class="line"></span><br><span class="line">tomcat7:run-war-only</span><br><span class="line">  Description: Same as run-war goal without forking the package cycle.</span><br><span class="line"></span><br><span class="line">tomcat7:shutdown</span><br><span class="line">  Description: Shuts down all possibly started embedded Tomcat servers. This</span><br><span class="line">    will be automatically done through a shutdown hook or you may call this</span><br><span class="line">    Mojo to shut them down explictly.</span><br><span class="line"></span><br><span class="line">    By default the shutdown goal is not bound to any phase. For integration</span><br><span class="line">    tests you might want to bind it to post-integration-test.</span><br><span class="line"></span><br><span class="line">tomcat7:standalone-war</span><br><span class="line">  Description: This Mojo will create an executable war file with embedded</span><br><span class="line">    Tomcat that is also capable of being deployed elsewhere.</span><br><span class="line"></span><br><span class="line">tomcat7:standalone-war-only</span><br><span class="line">  Description: This Mojo will create an executable war file with embedded</span><br><span class="line">    Tomcat that is also capable of being deployed elsewhere.</span><br><span class="line"></span><br><span class="line">tomcat7:undeploy</span><br><span class="line">  Description: Undeploy a WAR from Tomcat.</span><br><span class="line"></span><br><span class="line">For more information, run &apos;mvn help:describe [...] -Ddetail&apos;</span><br></pre></td></tr></table></figure></p>
+<p>   由于在指定plugin的时候，写了完整的groupId，所以这样也是可以的`</p>
+<p>常见命令</p>
+<ul>
+<li>mvn tomcat7:run</li>
+<li>mvn tomcat:deploy</li>
+<li>mvn tomcat:undeploy</li>
+</ul>
+<p>如何查看一个maven插件的帮助文档，并举一个例子（可以将你查看到的帮助文档内容贴出来，可以只贴一部分）</p>
+<p>关于tomcat7插件，在本章课程中仅仅演示了run这个目标。在实际应用中还会经常使用到deploy，undeploy这两个目标。</p>
+<p>请查找资料，说明对于tomcat7这个插件来说，run与deploy这两个目标的区别与联系</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/html/git/2018/08/25/5-git补充资料.html" rel="prev" title="5. Git补充资料">
+      <i class="fa fa-chevron-left"></i> 5. Git补充资料
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/html/android-studio/2018/09/08/android-studio-小贴士.html" rel="next" title="Android Studio 小贴士">
+      Android Studio 小贴士 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pom-xml"><span class="nav-number">2.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat插件"><span class="nav-number">3.</span> <span class="nav-text">Tomcat插件</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">leiTKai</p>
+  <div class="site-description" itemprop="description">personal website</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leiTKai</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"DNTEG3O773","apiKey":"dbae86bf58ba49b0e9f250a3983ac7ff","indexName":"likaiailei","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="目前，书中见到的类、接口和枚举类型都定义为顶层类型。也就是说，都是包的直接成员，独立于其他类型。不过，类型还可以嵌套在其他类型中定义。这种类型是嵌套类型（nested type），一般称为“内部类”，是 Java 语言的一个强大功能。 嵌套类型有两个独立的目的，但都和封装有关。  如果某个类型需要特别深入地访问另一个类型的内部实现，可以嵌套定义这个类型。作为成员类型的嵌套类型，其访问方式与访问成员">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10 嵌套类">
+<meta property="og:url" content="/html/java/2018/10/08/10-嵌套类.html">
+<meta property="og:site_name" content="ac86&#39;s blog">
+<meta property="og:description" content="目前，书中见到的类、接口和枚举类型都定义为顶层类型。也就是说，都是包的直接成员，独立于其他类型。不过，类型还可以嵌套在其他类型中定义。这种类型是嵌套类型（nested type），一般称为“内部类”，是 Java 语言的一个强大功能。 嵌套类型有两个独立的目的，但都和封装有关。  如果某个类型需要特别深入地访问另一个类型的内部实现，可以嵌套定义这个类型。作为成员类型的嵌套类型，其访问方式与访问成员">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-04T15:59:09.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10 嵌套类">
+<meta name="twitter:description" content="目前，书中见到的类、接口和枚举类型都定义为顶层类型。也就是说，都是包的直接成员，独立于其他类型。不过，类型还可以嵌套在其他类型中定义。这种类型是嵌套类型（nested type），一般称为“内部类”，是 Java 语言的一个强大功能。 嵌套类型有两个独立的目的，但都和封装有关。  如果某个类型需要特别深入地访问另一个类型的内部实现，可以嵌套定义这个类型。作为成员类型的嵌套类型，其访问方式与访问成员">
+
+<link rel="canonical" href="/html/java/2018/10/08/10-嵌套类.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>10 嵌套类 | ac86's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ac86's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">---</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/acc8226" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="/html/java/2018/10/08/10-嵌套类.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="leiTKai">
+      <meta itemprop="description" content="personal website">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ac86's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          10 嵌套类
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-10-08 12:30:00" itemprop="dateCreated datePublished" datetime="2018-10-08T12:30:00+08:00">2018-10-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-04 23:59:09" itemprop="dateModified" datetime="2020-03-04T23:59:09+08:00">2020-03-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>目前，书中见到的类、接口和枚举类型都定义为顶层类型。也就是说，都是包的直接成员，独立于其他类型。不过，类型还可以嵌套在其他类型中定义。这种类型是嵌套类型（nested type），一般称为“内部类”，是 Java 语言的一个强大功能。</p>
+<p>嵌套类型有两个独立的目的，但都和封装有关。</p>
+<ul>
+<li>如果某个类型需要特别深入地访问另一个类型的内部实现，可以嵌套定义这个类型。作为成员类型的嵌套类型，其访问方式与访问成员变量和方法的方式一样，而且能打破封装的规则。</li>
+<li>某个类型可能只在特定的情况下需要使用，而且只在非常小的代码区域使用。这个类型应该密封在一个小范围内，因为它其实是实现细节的一部分，应该封装在一个系统的其他部分无法接触到的地方。</li>
+</ul>
+<p>嵌套类型也可以理解为通过某种方式和其他类型绑定在一起的类型，不作为完全独立的实体真实存在。类型能通过<strong>四种</strong>不同的方式嵌套在其他类型中。</p>
+<blockquote>
+<p>提示　内部类编译成功后生成的字节码文件是“外部类$内部类.class”。</p>
+</blockquote>
+<ul>
+<li><p><strong>静态成员类型</strong><br>静态成员类型是定义为其他类型静态成员的类型。<strong>嵌套的接口、枚举和注解</strong>始终都是静态成员类型（就算不使用 static 关键字也是）。</p>
+</li>
+<li><p><strong>非静态成员类</strong><br>“非静态成员类型”就是没使用 <code>static</code> 声明的成员类型。只有类才能作为非静态成员类型。</p>
+</li>
+<li><p><strong>局部类</strong><br>局部类是在 Java 代码块中定义的类，只在这个块中可见。接口、枚举和注解不能定义为局部类型。</p>
+</li>
+<li><p><strong>匿名局部(内部)类</strong><br>匿名类也是一种<strong>局部类</strong>，但对 Java 语言来说没有有意义的名称。因此没有名字。接口、枚举和注解不能定义为匿名类型。</p>
+</li>
+</ul>
+<p>“嵌套类型”这个术语虽然正确且准确，但开发者并没有普遍使用，大多数 Java 程序员使用的是一个意义模糊的术语——“内部类”。根据语境的不同，这个术语可以指代非静态成员类、局部类或匿名类，但不能指代静态成员类型，因此使用“内部类”这个术语时无法区分指代的是哪种嵌套类型。</p>
+<p>虽然表示各种嵌套类型的术语并不总是那么明确，但幸运的是，从语境中一般都能确定应该使用哪种句法。</p>
+<p>下面详细介绍这四种嵌套类型。每种类型都用单独的一节介绍其特性，使用时的限制，以及专用的 Java 句法。</p>
+<p>局部类在一个 Java 代码块中声明，不是类的成员。只有类才能局部定义，接口、枚举类型和注解类型都必须是顶层类型或静态成员类型。局部类往往在方法中定义，但也可以在类的静态初始化程序或实例初始化程序中定义。</p>
+<p>因为所有 Java 代码块都在类中，所以局部类都嵌套在外层类中。因此，局部类和成员类有很多共同的特性。局部类往往更适合看成完全不同的嵌套类型。</p>
+<ol>
+<li>局部类的特性<br>局部类有如下两个有趣的特性：<br>和成员类一样，局部类和外层实例关联，而且<strong>能访问外层类的任何成员，包括私有成员</strong>；<br>除了能访问外层类定义的字段之外，局部类还能访问局部方法的作用域中声明为 final 的任何局部变量、方法参数和异常参数。</li>
+<li>局部类的限制<br>局部类有如下限制。</li>
+</ol>
+<ul>
+<li>局部类的名称只存在于定义它的块中，在块的外部不能使用。（但是要注意，在类的作用域中创建的局部类实例，在这个作用域之外仍能使用。稍后本节会详细说明这种情况。）</li>
+<li>局部类不能声明为 public、protected、private 或 static。</li>
+<li>与成员类的原因一样，局部类不能包含静态字段、方法或类。唯一的例外是同时使用 static 和 final 声明的常量。</li>
+<li>接口、枚举类型和注解类型不能局部定义。</li>
+<li>局部类和成员类一样，不能与任何外层类同名。</li>
+<li>前面说过，局部类能使用同一个作用域中的局部变量、方法参数和异常参数，但这些变量或参数必须声明为 final。这是因为，局部类实例的生命周期可能比定义它的方法的执行时间长很多。<blockquote>
+<p>局部类用到的每个局部变量都有一个私有内部副本（这些副本由 javac 自动生成）。只有把局部变量声明为 final 才能保证局部变量和私有副本始终保持一致。</p>
+</blockquote>
+</li>
+</ul>
+<p>这一点从下述代码中可以看出：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Weird</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 静态成员接口，下面会用到</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">interface</span> <span class="title">IntHolder</span> </span>&#123; <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getValue</span><span class="params">()</span></span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    IntHolder[] holders = <span class="keyword">new</span> IntHolder[<span class="number">10</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">      <span class="keyword">final</span> <span class="keyword">int</span> fi = i;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 局部类</span></span><br><span class="line">      <span class="class"><span class="keyword">class</span> <span class="title">MyIntHolder</span> <span class="keyword">implements</span> <span class="title">IntHolder</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 使用前面定义的final变量</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getValue</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> fi; &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      holders[i] = <span class="keyword">new</span> MyIntHolder();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 局部类不在作用域中了，因此不能使用</span></span><br><span class="line">    <span class="comment">// 但是在数组中保存有这个类的10个有效实例</span></span><br><span class="line">    <span class="comment">// 局部变量fi现在已经不在作用域中了</span></span><br><span class="line">    <span class="comment">// 但仍然在那10个对象getValue()方法的作用域中</span></span><br><span class="line">    <span class="comment">// 因此，可以在每个对象上调用getValue()方法，打印fi的值</span></span><br><span class="line">    <span class="comment">// 下述代码打印数字 0 到 9</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">      System.out.println(holders[i].getValue());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/html/ant/2018/09/16/win7下ant打包安卓apk.html" rel="prev" title="Win7下Ant打包安卓apk">
+      <i class="fa fa-chevron-left"></i> Win7下Ant打包安卓apk
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/html/java/2018/10/09/11-java异常.html" rel="next" title="11 Java异常">
+      11 Java异常 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">leiTKai</p>
+  <div class="site-description" itemprop="description">personal website</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leiTKai</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

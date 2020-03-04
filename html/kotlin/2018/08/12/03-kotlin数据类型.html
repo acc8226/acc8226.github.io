@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"DNTEG3O773","apiKey":"dbae86bf58ba49b0e9f250a3983ac7ff","indexName":"likaiailei","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Kotlin基本数据类型 Kotlin的8个基本数据类型没有对应的包装类，Kotlin编译器会根据不同的场景将其编译成为Java中的基本类型数据还是包装类对象。例如，Kotlin的Int用来声明变量、常量、属性、函数参数类型和函数返回类型等情况时，被编译为Java的int类型；当作为集合泛型类似参数时，则被编译为Java的java.lang.Integer，这是因为Java集合中只能保存对象，不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="03. Kotlin数据类型">
+<meta property="og:url" content="/html/kotlin/2018/08/12/03-kotlin数据类型.html">
+<meta property="og:site_name" content="ac86&#39;s blog">
+<meta property="og:description" content="Kotlin基本数据类型 Kotlin的8个基本数据类型没有对应的包装类，Kotlin编译器会根据不同的场景将其编译成为Java中的基本类型数据还是包装类对象。例如，Kotlin的Int用来声明变量、常量、属性、函数参数类型和函数返回类型等情况时，被编译为Java的int类型；当作为集合泛型类似参数时，则被编译为Java的java.lang.Integer，这是因为Java集合中只能保存对象，不">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-58dce43e3f3ed7d8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-f8a1645f6775371d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-bb5c986ace88236d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-78ed35e28f840dcf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-03-04T15:59:09.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="03. Kotlin数据类型">
+<meta name="twitter:description" content="Kotlin基本数据类型 Kotlin的8个基本数据类型没有对应的包装类，Kotlin编译器会根据不同的场景将其编译成为Java中的基本类型数据还是包装类对象。例如，Kotlin的Int用来声明变量、常量、属性、函数参数类型和函数返回类型等情况时，被编译为Java的int类型；当作为集合泛型类似参数时，则被编译为Java的java.lang.Integer，这是因为Java集合中只能保存对象，不">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/1662509-58dce43e3f3ed7d8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="/html/kotlin/2018/08/12/03-kotlin数据类型.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>03. Kotlin数据类型 | ac86's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ac86's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">---</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/acc8226" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="/html/kotlin/2018/08/12/03-kotlin数据类型.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="leiTKai">
+      <meta itemprop="description" content="personal website">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ac86's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          03. Kotlin数据类型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-08-12 22:58:59" itemprop="dateCreated datePublished" datetime="2018-08-12T22:58:59+08:00">2018-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-04 23:59:09" itemprop="dateModified" datetime="2020-03-04T23:59:09+08:00">2020-03-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kotlin/" itemprop="url" rel="index"><span itemprop="name">kotlin</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://upload-images.jianshu.io/upload_images/1662509-58dce43e3f3ed7d8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Java中八大基本数据类型"></p>
+<h2 id="Kotlin基本数据类型"><a href="#Kotlin基本数据类型" class="headerlink" title="Kotlin基本数据类型"></a>Kotlin基本数据类型</h2><p><img src="https://upload-images.jianshu.io/upload_images/1662509-f8a1645f6775371d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>Kotlin的8个基本数据类型没有对应的包装类，Kotlin编译器会根据不同的场景将其编译成为Java中的基本类型数据还是包装类对象。例如，Kotlin的Int用来声明变量、常量、属性、函数参数类型和函数返回类型等情况时，被编译为Java的int类型；当作为集合泛型类似参数时，则被编译为Java的java.lang.Integer，这是因为Java集合中只能保存对象，不能是基本数据类型。Kotlin编译器如此设计是因为基本类型数据能占用更少的内存，运行时效率更高。</p>
+<blockquote>
+<p><strong>Java程序员注意</strong>　在Java中表示long类型整数时可以在数字后面加小写英文字母l，但由于可读性不好，容易被误认为是阿拉伯数字1，所以在Kotlin中部不允许这样表示。</p>
+</blockquote>
+<p>在使用整数变量赋值，还可以使用二进制和十六进制表示，但不支持八进制，它们的表示方式分别如下：</p>
+<ul>
+<li>二进制数：以 0b 或0B为前缀，注意0是阿拉伯数字，不要误认为是英文字母o。</li>
+<li>十六进制数：以 0x 或0X为前缀，注意0是阿拉伯数字。</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明整数变量</span></span><br><span class="line"><span class="comment">// 输出一个默认整数常量为 Int</span></span><br><span class="line">println(<span class="string">"默认整数常量 =  "</span> + <span class="number">16</span>)     </span><br><span class="line"><span class="keyword">val</span> a: <span class="built_in">Byte</span> = <span class="number">16</span>         </span><br><span class="line"><span class="keyword">val</span> b: <span class="built_in">Short</span> = <span class="number">16</span>    </span><br><span class="line"><span class="keyword">val</span> c = <span class="number">16</span>           </span><br><span class="line"><span class="keyword">val</span> d = <span class="number">16</span>L          </span><br><span class="line"></span><br><span class="line">println(<span class="string">"Byte整数     =  "</span> + a)</span><br><span class="line">println(<span class="string">"Short整数    =  "</span> + b)</span><br><span class="line">println(<span class="string">"Int整数      =  "</span> + c)</span><br><span class="line">println(<span class="string">"Long整数     =  "</span> + d)</span><br><span class="line"></span><br><span class="line"><span class="comment">//数字常量添加下划线，增强可读性</span></span><br><span class="line"><span class="keyword">val</span> e = <span class="number">160</span>_000_000L       <span class="comment">//表示160000000数字</span></span><br><span class="line">println(<span class="string">"数字常量添加下划线   =  "</span> + e)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> decimalInt = <span class="number">28</span>         <span class="comment">//十进制表示</span></span><br><span class="line"><span class="keyword">val</span> binaryInt1 = <span class="number">0</span>b11100    <span class="comment">//二进制表示</span></span><br><span class="line"><span class="keyword">val</span> binaryInt2 = <span class="number">0</span>B11100    <span class="comment">//二进制表示</span></span><br><span class="line"><span class="keyword">val</span> hexadecimalInt1 = <span class="number">0x1C</span>    <span class="comment">//十六进制表示</span></span><br><span class="line"><span class="keyword">val</span> hexadecimalInt2 = <span class="number">0X1C</span>    <span class="comment">//十六进制表示</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明浮点数</span></span><br><span class="line"><span class="comment">// 输出一个默认浮点常量为 Double</span></span><br><span class="line">println(<span class="string">"默认浮点常量    =  "</span> + <span class="number">360.66</span>)   </span><br><span class="line"><span class="keyword">val</span> myMoney = <span class="number">360.66</span>f  </span><br><span class="line"><span class="keyword">val</span> yourMoney = <span class="number">360.66</span> </span><br><span class="line"></span><br><span class="line">println(<span class="string">"Float浮点数  =  "</span> + myMoney)</span><br><span class="line">println(<span class="string">"Double浮点数 =  "</span> + yourMoney)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在Kotlin语言中声明布尔类型的关键字是Boolean，它只有两个值：true和false。</span></span><br><span class="line"><span class="keyword">val</span> isMan = <span class="literal">true</span></span><br><span class="line"><span class="keyword">val</span> isWoman = <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h2 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h2><p>和Java一样, 字符类型表示单个字符，Kotlin中Char声明字符类型，Kotlin中的字符常量必须用单引号括起来的单个字符。</p>
+<p>Kotlin字符采用双字节Unicode编码，占<strong>两个字节（16位）</strong>，因而可用十六进制（无符号的）编码形式表示，它们的表现形式是<code>\uXXXX</code>，其中<code>XXXX</code>为16位十六进制数，所以’A’字符也可以用Unicode编码’\u0041’表示，如果对字符编码感兴趣可以到维基百科（<a href="https://zh.wikipedia.org/wiki/Unicode" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/Unicode</a>字符列表）查询。</p>
+<h2 id="转义字符-和java一致"><a href="#转义字符-和java一致" class="headerlink" title="转义字符(和java一致)"></a>转义字符(和java一致)</h2><p><img src="https://upload-images.jianshu.io/upload_images/1662509-bb5c986ace88236d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="常用转义符"></p>
+<h2 id="数值类型之间的转换"><a href="#数值类型之间的转换" class="headerlink" title="数值类型之间的转换"></a>数值类型之间的转换</h2><p>学习了前面的数据类型后，大家会思考一个问题，数据类型之间是否可以转换呢？数据类型的转换情况比较复杂。在基本数据类型中数值类型之间可以互相转换，字符类型和布尔类型不能与它们之间进行转换。<br>本节讨论数值类型之间互相转换，<strong>数值</strong>在进行赋值时采用的是<strong>显示转换</strong>，而在<strong>数学计算</strong>时采用的是<strong>隐式转换</strong>。</p>
+<h3 id="赋值与显式转换"><a href="#赋值与显式转换" class="headerlink" title="赋值与显式转换"></a>赋值与显式转换</h3><p>Kotlin是一种安全的语言，对于类型的检查非常严格，不同类型数值进行赋值是禁止的. Kotlin中要想实现这种赋值转换，需要使用转换函数显式转换。Kotlin的6种数值类型（Byte、Short、Int、Long、Float和Double），以及Char类型都有如下7个转换函数：</p>
+<ul>
+<li>toByte(): Byte</li>
+<li>toShort(): Short</li>
+<li>toInt(): Int</li>
+<li>toLong(): Long</li>
+<li>toFloat(): Float</li>
+<li>toDouble(): Double</li>
+<li>toChar(): Char</li>
+</ul>
+<h3 id="数学计算与隐式转换"><a href="#数学计算与隐式转换" class="headerlink" title="数学计算与隐式转换"></a>数学计算与隐式转换</h3><p>多个数值类型数据可以数学计算，由于参与进行数学计算的数值类型可能不同，编译器会根据上下文环境进行隐式转换。</p>
+<h2 id="可空类型"><a href="#可空类型" class="headerlink" title="可空类型"></a>可空类型</h2><p>Kotlin语言与Swift语言类似，默认情况下所有的数据类型都是非空类型（Non-Null），声明的变量都是不能接收空值（null）的。这一点与Java和Objective-C等语言有很大的不同。</p>
+<h3 id="可空类型概念"><a href="#可空类型概念" class="headerlink" title="可空类型概念"></a>可空类型概念</h3><p>Kotlin的非空类型设计能够有些防止空指针异常（NullPointerException）。在Kotlin中可以将一个对象的声明为非空类型，那么它就永远不会接收空值，否则会发生编译错误。示例代码如下：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> n: <span class="built_in">Int</span> = <span class="number">10</span></span><br><span class="line">n = <span class="literal">null</span>      <span class="comment">//发生编译错误</span></span><br></pre></td></tr></table></figure></p>
+<p>Kotlin为每一种非空类型提供对应的可空类型（Nullable），就是在非空类型后面加上问号（?）表示可空类型。<br><code>var n: Int? = 10</code></p>
+<p>Int?是可空类型，它所声明的变量n可以接收空值。可空类型在具体使用时会有一些限制：</p>
+<ul>
+<li>不能直接调用可空类型对象的函数或属性。</li>
+<li>不能把可空类型数据赋值给非空类型变量。</li>
+<li>不能把可空类型数据传递给非空类型参数的函数。</li>
+</ul>
+<p>为了“突破”这些限制，Kotlin提供了如下运算符：</p>
+<ul>
+<li>安全调用运算符：?.</li>
+<li>安全转换运算符：as?</li>
+<li>Elvis运算符：?:</li>
+<li>非空断言：!!</li>
+</ul>
+<h3 id="使用安全调用运算符（-）"><a href="#使用安全调用运算符（-）" class="headerlink" title="使用安全调用运算符（?.）"></a>使用安全调用运算符（?.）</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">val</span> divNumber1 = divide(<span class="number">100</span>, <span class="number">0</span>)    </span><br><span class="line">	<span class="keyword">val</span> result1 = divNumber1?.plus(<span class="number">100</span>)<span class="comment">//divNumber1+100，结果null </span></span><br><span class="line">	println(result1)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">val</span> divNumber2 = divide(<span class="number">100</span>, <span class="number">10</span>)   </span><br><span class="line">	<span class="keyword">val</span> result2 = divNumber2?.plus(<span class="number">100</span>)<span class="comment">//divNumber2+100，结果110.0    </span></span><br><span class="line">	println(result2)</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; Output:</span><br><span class="line">&gt;&gt;&gt; <span class="literal">null</span></span><br><span class="line">&gt;&gt;&gt; <span class="number">110.0</span></span><br></pre></td></tr></table></figure>
+<p>上述代码自定义了divide函数进行除法运算，当参数n2为0的情况下，函数返回空值，所以函数返回类型必须是Double的可空类型，即Double?。</p>
+<h3 id="非空断言运算符（-）"><a href="#非空断言运算符（-）" class="headerlink" title="非空断言运算符（!!）"></a>非空断言运算符（!!）</h3><p>可空类型变量可以使用非空断言运算符（!!）调用非空类型的函数或属性。非空断言运算符（!!）顾名思义就是断言可空类型变量不会为空，调用过程是存在风险的，如果可空类型变量真的为空，则会抛出空指针异常；如果非则可以正常调用函数或属性。<br>修改代码如下：<br><code>val result1 = divNumber1!!.plus(100)//divNumber1+100，结果110.0</code></p>
+<h3 id="使用Elvis运算符（-）"><a href="#使用Elvis运算符（-）" class="headerlink" title="使用Elvis运算符（?:）"></a>使用Elvis运算符（?:）</h3><p>有的时候在可空类型表达式中，当表达式为空值时，并不希望返回默认的空值，而是其他数值。此时可以使用Elvis运算符（?:），也称为空值合并运算符，Elvis运算符有两个操作数，假设有表达式：A ?: B，如果A不为空值则结果为A；否则结果为B。</p>
+<p>Elvis运算符经常与安全调用运算符结合使用，重写上一节示例代码如下：<br><code>val result1 = divNumber1?.plus(100) ?: 0//divNumber1+100，结果0</code></p>
+<blockquote>
+<p><strong>Elvis运算符由来</strong>　Elvis一词是指美国摇滚歌手埃尔维斯·普雷斯利（Elvis Presley），绰号“猫王”。由于他的头型和眼睛很有特点，不用过多解释，从图6-3可见为什么?:叫做Elvis了。<br><img src="https://upload-images.jianshu.io/upload_images/1662509-78ed35e28f840dcf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.ituring.com.cn/book/tupubarticle/19721" target="_blank" rel="noopener">第 6 章　数据类型-图灵社区</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/html/kotlin/2018/08/12/02-第一段kotlin代码.html" rel="prev" title="02. 第一段Kotlin代码">
+      <i class="fa fa-chevron-left"></i> 02. 第一段Kotlin代码
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/html/测试/2018/08/16/测试标签插件（tag-plugins）.html" rel="next" title="测试标签插件（Tag Plugins）">
+      测试标签插件（Tag Plugins） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin基本数据类型"><span class="nav-number">1.</span> <span class="nav-text">Kotlin基本数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符类型"><span class="nav-number">2.</span> <span class="nav-text">字符类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#转义字符-和java一致"><span class="nav-number">3.</span> <span class="nav-text">转义字符(和java一致)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数值类型之间的转换"><span class="nav-number">4.</span> <span class="nav-text">数值类型之间的转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#赋值与显式转换"><span class="nav-number">4.1.</span> <span class="nav-text">赋值与显式转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数学计算与隐式转换"><span class="nav-number">4.2.</span> <span class="nav-text">数学计算与隐式转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可空类型"><span class="nav-number">5.</span> <span class="nav-text">可空类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可空类型概念"><span class="nav-number">5.1.</span> <span class="nav-text">可空类型概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用安全调用运算符（-）"><span class="nav-number">5.2.</span> <span class="nav-text">使用安全调用运算符（?.）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非空断言运算符（-）"><span class="nav-number">5.3.</span> <span class="nav-text">非空断言运算符（!!）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Elvis运算符（-）"><span class="nav-number">5.4.</span> <span class="nav-text">使用Elvis运算符（?:）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">leiTKai</p>
+  <div class="site-description" itemprop="description">personal website</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leiTKai</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

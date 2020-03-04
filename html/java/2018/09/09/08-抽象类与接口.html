@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"DNTEG3O773","apiKey":"dbae86bf58ba49b0e9f250a3983ac7ff","indexName":"likaiailei","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="抽象类 抽象类代表了一种优化了的概念组织方式,来描述事物的一般状态和行为,然后在子类中去实现这些状态和行为,以适应对象的多样性.   抽象类声明和实现在Java中抽象类和抽象方法的修饰符是abstract, 注意抽象方法中只有方法的声明，没有方法的实现  抽象类不能被实例化,只有具体类才能被实例化。 抽象类中是有默认的构造函数, 只供子类实例化调用。  抽象类中可以包含具体方法和抽象方法  abs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="08 抽象类与接口">
+<meta property="og:url" content="/html/java/2018/09/09/08-抽象类与接口.html">
+<meta property="og:site_name" content="ac86&#39;s blog">
+<meta property="og:description" content="抽象类 抽象类代表了一种优化了的概念组织方式,来描述事物的一般状态和行为,然后在子类中去实现这些状态和行为,以适应对象的多样性.   抽象类声明和实现在Java中抽象类和抽象方法的修饰符是abstract, 注意抽象方法中只有方法的声明，没有方法的实现  抽象类不能被实例化,只有具体类才能被实例化。 抽象类中是有默认的构造函数, 只供子类实例化调用。  抽象类中可以包含具体方法和抽象方法  abs">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-04T15:59:09.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="08 抽象类与接口">
+<meta name="twitter:description" content="抽象类 抽象类代表了一种优化了的概念组织方式,来描述事物的一般状态和行为,然后在子类中去实现这些状态和行为,以适应对象的多样性.   抽象类声明和实现在Java中抽象类和抽象方法的修饰符是abstract, 注意抽象方法中只有方法的声明，没有方法的实现  抽象类不能被实例化,只有具体类才能被实例化。 抽象类中是有默认的构造函数, 只供子类实例化调用。  抽象类中可以包含具体方法和抽象方法  abs">
+
+<link rel="canonical" href="/html/java/2018/09/09/08-抽象类与接口.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>08 抽象类与接口 | ac86's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ac86's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">---</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/acc8226" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="/html/java/2018/09/09/08-抽象类与接口.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="leiTKai">
+      <meta itemprop="description" content="personal website">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ac86's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          08 抽象类与接口
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 20:49:50" itemprop="dateCreated datePublished" datetime="2018-09-09T20:49:50+08:00">2018-09-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-04 23:59:09" itemprop="dateModified" datetime="2020-03-04T23:59:09+08:00">2020-03-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h2><blockquote>
+<p><strong>抽象类</strong>代表了一种优化了的概念组织方式,来描述事物的一般状态和行为,然后在子类中去实现这些状态和行为,以适应对象的多样性. </p>
+</blockquote>
+<h3 id="抽象类声明和实现"><a href="#抽象类声明和实现" class="headerlink" title="抽象类声明和实现"></a>抽象类声明和实现</h3><p>在Java中抽象类和抽象方法的修饰符是<code>abstract</code>, 注意抽象方法中只有方法的声明，没有方法的实现</p>
+<ul>
+<li>抽象类不能被实例化,只有具体类才能被实例化。</li>
+<li>抽象类中是有默认的构造函数, 只供子类实例化调用。 </li>
+<li>抽象类中可以包含具体方法和抽象方法</li>
+</ul>
+<pre><code class="java"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> 类名称</span>{           
+    member var;  
+    method（）{…}       <span class="comment">//一般方法</span>
+    <span class="function"><span class="keyword">abstract</span> <span class="title">method</span><span class="params">()</span>；  <span class="comment">//抽象方法, 抽象方法在后直接跟分号          </span></span>
+<span class="function">  }</span>
+</code></pre>
+<p>普通类加上abstract关键字就变成了抽象类,没有任何条件限制.但是有抽象方法的类必须定义为抽象类,否则会提示<strong><code>The type XXX must be an abstract class to define abstract methods</code> </strong><br>　　<br>Q: 抽象关键字abstract不可以和哪些关键字共存？ 　　　　<br>A: <code>private</code>  私有内容子类继承不到，所以，不能重写. 但是，abstract修饰的方法，要求被重写。两者冲突。<br><code>final</code>   final修饰的方法不能被重写。而abstract修饰的方法，要求被重写。两者冲突。<br><code>static</code> 假如一个抽象方法能通过static修饰，那么这个方法，就可以直接通过类名调用。而抽象方法是没有方法体的，这样的调用无意义。所以，不能用static修饰。 </p>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>比抽象类更加抽象的是接口，在接口中所有的方法都是抽象的。</p>
+<blockquote>
+<p>提示　Java 8之后接口中新增加了默认方法，因此“接口中所有的方法都是抽象的”这个提法在Java 8之后是有待商榷。</p>
+</blockquote>
+<ul>
+<li>Java中不支持多继承,而是通过接口实现比多重继承更强的功能,java通过接口可以使出于不同层次,甚至不相关的类具有相同的行为.</li>
+<li>接口可以认为是特殊的抽象类, 不能用于直接创建对象.接口的作用在于规定一些功能框架,具体功能的实现则通过该接口约束的类完成. </li>
+</ul>
+<p>接口的定义:由常量和抽象方法组成  </p>
+<pre><code class="java">[public] interface 接口名 [extends 父接口名列表 ]  {                 
+    [<span class="keyword">public</span>] [<span class="keyword">static</span>] [<span class="keyword">final</span>] 域类型 域名 = 常量值 ;                 
+    [<span class="keyword">public</span>] [<span class="keyword">abstract</span>] 返回值 方法名(参数列表) [<span class="keyword">throw</span> 异常列表]；           
+ }
+</code></pre>
+<ol>
+<li>声明接口可给出访问控制符；  </li>
+<li>一个接口还可以继承多个父接口，父接口间用逗号分隔。   </li>
+<li>系统默认接口中所有属性的修饰都是public static final,毕老师说的全局常量.   </li>
+<li>系统默认接口中所有方法的修饰都是public abstract;即抽象方法.  </li>
+</ol>
+<h3 id="接口的实现"><a href="#接口的实现" class="headerlink" title="接口的实现"></a>接口的实现</h3><ul>
+<li>定义了一套行为规范,一个类实现这个接口就是要遵守接口的定义规范,要实现接口中定义的所有方法.          </li>
+<li>一个类可以实现多个接口。接口间用逗号分隔；  </li>
+<li>如果实现某接口的类不是抽象类,则在类的定义部分必须实现指定接口的所有抽象方法;否则编译时会指示该类只能为抽象类是不能创建对象的.   </li>
+<li>接口的抽象方法的访问限制符默认为public</li>
+</ul>
+<h3 id="Java-8新特性默认方法和静态方法"><a href="#Java-8新特性默认方法和静态方法" class="headerlink" title="Java 8新特性默认方法和静态方法"></a>Java 8新特性默认方法和静态方法</h3><p>Java 8在接口中提供了声明默认方法和静态方法的能力。接口示例代码如下：<br><code>`</code> java</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/html/java/2018/09/09/07-java的继承与多态.html" rel="prev" title="07 Java的继承与多态">
+      <i class="fa fa-chevron-left"></i> 07 Java的继承与多态
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/html/java/2018/09/09/09-java异常.html" rel="next" title="09 Java异常">
+      09 Java异常 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#抽象类"><span class="nav-number">1.</span> <span class="nav-text">抽象类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象类声明和实现"><span class="nav-number">1.1.</span> <span class="nav-text">抽象类声明和实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口"><span class="nav-number">2.</span> <span class="nav-text">接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口的实现"><span class="nav-number">2.1.</span> <span class="nav-text">接口的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-8新特性默认方法和静态方法"><span class="nav-number">2.2.</span> <span class="nav-text">Java 8新特性默认方法和静态方法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">leiTKai</p>
+  <div class="site-description" itemprop="description">personal website</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leiTKai</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

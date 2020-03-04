@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"DNTEG3O773","apiKey":"dbae86bf58ba49b0e9f250a3983ac7ff","indexName":"likaiailei","hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="initgit init [path] 初始化仓库git init [path] –bare 初始化一个裸仓库 status$ git status 经常检查当前文件状态是个好习惯 $ git help &amp;lt;command&amp;gt; / $ git &amp;lt;command&amp;gt; --help 获取帮助 add 跟踪新文件这是个多功能命令，根据目标文件的状态不同，此命令的效果也不同：可以用它开始">
+<meta name="keywords" content="版本控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3. Git常见操作">
+<meta property="og:url" content="/html/git/2018/08/19/3-git常见操作.html">
+<meta property="og:site_name" content="ac86&#39;s blog">
+<meta property="og:description" content="initgit init [path] 初始化仓库git init [path] –bare 初始化一个裸仓库 status$ git status 经常检查当前文件状态是个好习惯 $ git help &amp;lt;command&amp;gt; / $ git &amp;lt;command&amp;gt; --help 获取帮助 add 跟踪新文件这是个多功能命令，根据目标文件的状态不同，此命令的效果也不同：可以用它开始">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1662509-36a54e70c4e18774.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-03-04T15:59:09.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="3. Git常见操作">
+<meta name="twitter:description" content="initgit init [path] 初始化仓库git init [path] –bare 初始化一个裸仓库 status$ git status 经常检查当前文件状态是个好习惯 $ git help &amp;lt;command&amp;gt; / $ git &amp;lt;command&amp;gt; --help 获取帮助 add 跟踪新文件这是个多功能命令，根据目标文件的状态不同，此命令的效果也不同：可以用它开始">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/1662509-36a54e70c4e18774.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="/html/git/2018/08/19/3-git常见操作.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>3. Git常见操作 | ac86's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ac86's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">---</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/acc8226" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="/html/git/2018/08/19/3-git常见操作.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="leiTKai">
+      <meta itemprop="description" content="personal website">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ac86's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          3. Git常见操作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-08-19 23:00:05" itemprop="dateCreated datePublished" datetime="2018-08-19T23:00:05+08:00">2018-08-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-04 23:59:09" itemprop="dateModified" datetime="2020-03-04T23:59:09+08:00">2020-03-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>git init [path] 初始化仓库<br>git init [path] –bare 初始化一个裸仓库</p>
+<h2 id="status"><a href="#status" class="headerlink" title="status"></a>status</h2><p><code>$ git status</code> 经常检查当前文件状态是个好习惯</p>
+<p><code>$ git help &lt;command&gt;</code> / <code>$ git &lt;command&gt; --help</code> 获取帮助</p>
+<h2 id="add-跟踪新文件"><a href="#add-跟踪新文件" class="headerlink" title="add 跟踪新文件"></a>add 跟踪新文件</h2><p>这是个多功能命令，根据目标文件的状态不同，此命令的效果也不同：可以用它开始跟踪新文件，或者把已跟踪的文件放到暂存区，还能用于合并时把有冲突的文件标记为已解决状态等<br><code>git add [filename1] [filename2] ...</code>//可以一次提交很多文件<br>例如<br>     <code>$ git add AndroidManifest.xml</code><br>     <code>$ git add src/com/coolweather/app/MainActivity.java</code><br>     <code>$ git add src/</code> add单个文件夹<br>     <code>$ git add .</code>添加对应目录下<strong>所有文件和文件夹</strong></p>
+<h2 id="rm-删除操作"><a href="#rm-删除操作" class="headerlink" title="rm 删除操作"></a>rm 删除操作</h2><p><code>$ git rm</code> 从暂存区和工作区删除, 直接做了本地rm和add到暂存区的操作</p>
+<p><code>$ git rm --cached readme.txt</code> 从暂存区删除，但仍然希望保留在当前工作目录中。换句话说，仅是从跟踪清单中删除。比如一些大型日志文件或者一堆 .a 编译文件，不小心纳入仓库后，要移除跟踪但不删除文件，以便稍后在 <code>.gitignore</code>文件中补上</p>
+<p><code>$ git rm $(git ls-files --deleted)</code>: 删除所有被跟踪, 但是在工作区总被删除的文件</p>
+<h2 id="mv操作"><a href="#mv操作" class="headerlink" title="mv操作"></a>mv操作</h2><p><code>$ git mv [oldFile] [newFile]</code><br>其实，运行 git mv 就相当于运行了下面三条命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mv README.txt README</span><br><span class="line">$ git rm README.txt</span><br><span class="line">$ git add README</span><br></pre></td></tr></table></figure></p>
+<h2 id="commit-提交"><a href="#commit-提交" class="headerlink" title="commit 提交"></a>commit 提交</h2><p><code>$ git commit -m &#39;initial project version&#39;</code><br>注意: Git 只不过暂存了你运行 git add 命令时的版本,而非当前工作目录中的版本。<br>每次修改，如果不add到暂存区，那就不会加入到commit中</p>
+<p><strong>跳过使用暂存区域</strong><br><code>$ git commit -a/--all -m &#39;added new benchmarks&#39;</code><br>Git 提供了一个跳过使用暂存区域的方式，只要在提交的时候，给git commit 加上 -a 选项，Git 就会自动把<strong>所有已经跟踪过的文件</strong>暂存起来一并提交，从而跳过 git add 步骤, 如果有未跟踪的文件还是需要先add</p>
+<blockquote>
+<p>OPTIONS<br> -a<br> –all<br>Tell the command to automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.</p>
+</blockquote>
+<p>小技巧: 修改最后一次提交的注释 <code>$ git commit --amend -m &quot;someMessage&quot;</code></p>
+<h2 id="log-查看提交历史"><a href="#log-查看提交历史" class="headerlink" title="log 查看提交历史"></a>log 查看提交历史</h2><p>  -num 参数表示我们只想看到num行记录.<br>  -p 按补丁格式显示每个更新之间的差异。<br>  –stat 显示每次更新的文件修改统计信息, 包含增改行数统计<br>  –shortstat 只显示 –stat 中最后的行数修改添加移除统计。<br>  –name-only 仅在提交信息后显示已修改的文件清单。<br>  –name-status 显示新增、修改、删除的文件清单。<br>  –abbrev-commit 仅显示 SHA-1 的前几个字符，而非所有的 40 个字符。<br>  –relative-date 使用较短的相对时间显示（比如，“2 weeks ago”）。<br>  –graph 显示 ASCII 图形表示的分支合并历史。<br>  –pretty 使用其他格式显示历史提交信息。可用的选项包括 oneline，short，full，fuller 和 format（后跟指定格式）。</p>
+<h2 id="reset"><a href="#reset" class="headerlink" title="reset"></a>reset</h2><ul>
+<li><p>取消已经暂存的文件<br><code>$ git reset HEAD &lt;file&gt;...</code> to unstage  将文件内容才能够上次提交 复制到<br>暂存区, 由于  <strong>暂存区</strong>的修改回退到<strong>工作区</strong></p>
+</li>
+<li><p>将当前分支回退到某个历史版本<br><code>$ git reset --soft commit_id</code>告诉Git重置HEAD到另外一个commit，但也到此为止<br><code>$ git reset --mixed commit_id</code> 【默认】它将重置HEAD到另外一个commit,并且重置index以便和HEAD相匹配，但是也到此为止。working copy不会被更改。<br><code>$ git reset --hard commit_id</code>将会blow out everything</p>
+</li>
+</ul>
+<p>在Git中，用HEAD表示当前版本， 所以通常可以省略<br>上一个版本就是<code>HEAD^</code>，上上一个版本就是<code>HEAD^^</code>，当然往上100个版本写100个^比较容易数不过来，所以写成<code>HEAD~100</code>。</p>
+<p>例如:<br><code>$ git reflog</code>要重返未来，查看命令历史<br>例如回退到上个版本git reset –hard HEAD^<br>通常根据reflog命令查看hash后连用<br><code>$ git reset --hard commit_id</code> 选择/回退历史版本<br><code>$ git checkout -- file</code>可以丢弃工作区的修改</p>
+<h2 id="git-diff"><a href="#git-diff" class="headerlink" title="git diff"></a>git diff</h2><p><code>$ git diff</code>查看尚未暂存的文件更新了哪些部分，不加参数直接输入 。<br>此命令比较的是工作目录中<strong>当前文件</strong>和<strong>暂存区域</strong>快照之间的差异，也就是修改之后还没有add暂存起来的变化内容。</p>
+<p><code>$ git diff -- [filename]</code> 查看工作区和版本库里面最新版本的区别</p>
+<p><code>$ git diff --cached</code> (或 <code>--staged</code>  Git 1.6.1 及更高版本上还允许使用，效果是相同的，但更好记)<br>比较已经<strong>暂存</strong>起来的文件和<strong>上次提交时</strong>的快照之间的差异</p>
+<p><code>$ git diff [&lt;commit-id&gt;] [&lt;commit-id&gt;]</code> 比较两个commit-id之间的差异</p>
+<h2 id="checkout-撤销-检出"><a href="#checkout-撤销-检出" class="headerlink" title="checkout 撤销/检出"></a>checkout 撤销/检出</h2><p><code>$ git checkout -- &lt;file&gt;...</code>（to discard changes in working directory）将文件内容从暂存区复制到工作目录</p>
+<p>举例<code>git checkout -- readme.txt</code>意思就是，把readme.txt文件在工作区的修改全部撤销，<br>这里有两种情况：<br>     一种是readme.txt自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；<br>     一种是readme.txt已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。<br>总之，就是让这个文件<strong>回到最近一次git commit或git add时的状态</strong>。<br>这条命令有些危险，所有对文件的修改都没有了，因为我们刚刚把之前版本的文件复制过来重写了此文件。所以在用这条命令前，请务必确定真的不再需要保留刚才的修改。</p>
+<p><code>$ git checkout [branchName]</code> 切换到分支<br><code>$ git checkout -</code> 切换到上一个分支<br><code>$ git checkout [commit id]</code> HEAD指向某一个commit id</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1662509-36a54e70c4e18774.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="reset vs checkout"></p>
+<h2 id="branch分支"><a href="#branch分支" class="headerlink" title="branch分支"></a>branch分支</h2><p>Git 鼓励开发者频繁使用分支，正是因为有着这些特性作保障。Git 是如何知道你当前在哪个分支上工作的呢？其实答案也很简单，它保存着一个名为 HEAD 的特别指针. （译注：将 HEAD 想象为当前分支的别名。）</p>
+<p><code>$ git branch [branch-name]</code>创建分支<br><code>$ git branch</code> 查看所有分支<br><code>$ git branch -a</code> 查看当前的版本库当中有哪些分支, 包含远程仓库的所有分支 </p>
+<p><code>$ git branch -v</code>要查看各个分支最后一个提交对象的信息 （译注：此为 –verbose 的简写，取首字母）</p>
+<p><code>$ git branch --merge</code><br>查看哪些分支已被并入当前分支（译注：也就是说哪些分支是当前分支的直接上游。一般来说，列表中没有 * 的分支通常都可以用 git branch -d 来删掉。原因很简单，既然已经把它们所包含的工作整合到了其他分支，删掉也不会损失什么。<br><code>$ git branch --no-merged</code> 查看尚未合并的工作，它会显示还未合并进来的分支。由于这些分支中还包含着尚未合并进来的工作成果，所以简单地用 git branch -d 删除该分支会提示错误，因为那样做会丢失数据, 过，如果你确实想要删除该分支上的改动，可以用大写的删除选项 -D 强制执行</p>
+<p>创建并切换到该分支 git branch -b [branch-name]<br>     相当于 git branch [branch-name]<br>               git checkout [branch-name]</p>
+<p><code>$ git branch -d &lt;branch-name&gt;</code> 删除分支<br><code>$ git merge [branch-name]</code> 合并某分支到当前分支 </p>
+<p>当合并分支时，如果可能，Git会用Fast forward模式，但这种模式下，删除分支后，会丢掉分支信息。<br>如果要强制<strong>禁用Fast forward模式</strong>，Git就会在merge时生成一个新的commit。<br>例如 <code>$ git merge --no-ff -m &quot;merge with no-ff&quot; dev</code></p>
+<h2 id="远程仓库-分支"><a href="#远程仓库-分支" class="headerlink" title="远程仓库/分支"></a>远程仓库/分支</h2><p>远程分支（remote branch）是对远程仓库中的分支的索引。它们是一些无法移动的本地分支；只有在 Git 进行网络交互时才会更新。远程分支就像是书签，提醒着你上次连接远程仓库时上面各分支的位置.</p>
+<p>现在新建的目录成了 mygrit，其他的都和上边的一样。<br>$ git clone git://github.com/schacon/grit.git mygrit<br>(一次 Git 克隆会建立你自己的本地分支 master 和远程分支 origin/master，并且将它们都指向 origin 上的 master 分支)</p>
+<p>查看当前配置有哪些远程仓库详细信息 //git remote -v<br>添加远程仓库 $ git remote add [remote-name] [url]<br>查看远程仓库信息 git remote show [remote-name]<br>远程仓库配置的重命名 git remote rename [old-name] [new-name]<br>远程仓库配置删除 git remote rm [remote-name]</p>
+<h2 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h2><p><code>$ git fetch [remote-name]</code>从远程仓库抓取数据同步到本地<br>有一点很重要，需要记住，fetch 命令只是将远端的数据拉到本地仓库，并不自动合并到当前工作分支，只有当你确实准备好了，才能手工合并。</p>
+<p>将远程版本库上的修改同步到本地<br>git fetch origin master 会将远程版本库上的代码同步到本地，不过同步下来的代码并不会<br>合并到任何分支上去，而是会存放在到一个 origin/master分支上，这时我们可以通过 diff命令来查看远程版本库上到底修改了哪些东西：<br><code>$ git diff origin/master</code><br>之后再调用 merge 命令将 origin/master 分支上的修改合并到主分支上即可：<br><code>$ git merge origin/master</code></p>
+<h2 id="跟踪远程分支"><a href="#跟踪远程分支" class="headerlink" title="跟踪远程分支"></a>跟踪远程分支</h2><p><code>$ git branch --set-upstream-to=&lt;remote-name&gt;/&lt;branch&gt; &lt;local-branch-name&gt;</code></p>
+<p>除非是已有项目， 否则一般直接checkout命令新建branch以及跟踪一句话即可。</p>
+<p>跟踪远程分支并新建切换到本地分支 git checkout -b [本地分支名] [远程名]/[分支名], 例如git checkout -b serverfix origin/serverfix</p>
+<p>如果你有 1.6.2 以上版本的 Git，<br>还可以用 –track 选项简化：<code>$ git checkout --track [远程名]/[分支名]</code></p>
+<p>从远程分支 checkout 出来的本地分支，称为 跟踪分支 (tracking branch)。跟踪分支是一种和某个远程分支有直接联系的本地分支。在跟踪分支里输入 git push，Git 会自行推断应该向哪个服务器的哪个分支推送数据。同样，在这些分支里运行 git pull 会获取所有远程索引，并把它们的数据都合并到本地分支中来。</p>
+<p><code>$ git checkout -b [分支名] [远程名]/[分支名]</code>， 这样你就可以在b继续开发了。</p>
+<h3 id="合并远程分支"><a href="#合并远程分支" class="headerlink" title="合并远程分支"></a>合并远程分支</h3><p>如果要把该远程分支的内容合并到当前分支，可以运行 <code>$ git merge origin/serverfix</code></p>
+<p><code>$ git pull &lt;remote&gt; &lt;branch&gt;</code>从远程仓库抓取数据并merge到当前分支</p>
+<pre><code>相当于将 fetch 和 merge 这两个命令放在一起执行了
+</code></pre><p>注：如果设置了某个分支用于跟踪某个远端仓库的分支, git pull，目的都是要从原始克隆的远端仓库中抓取数据后，合并到工作目录中的当前分支。</p>
+<p>注：在跟踪分支里可直接输入 git push，Git 会自行推断应该向哪个服务器的哪个分支推送数据</p>
+<p>*如果设置了跟踪， 可以直接git pull</p>
+<p>git push [远程名] [本地分支]:[远程分支] //推送数据到远程仓库</p>
+<p>例如：git push origin serverfix //简略写法</p>
+<p>*如果设置了跟踪， 可以直接git push</p>
+<p><code>git push (远程仓库名) (分支名) //表示 分支|同名远程分支</code></p>
+<p><code>git push (远程仓库名) (本地分支：远程分支)</code></p>
+<p>你可以把本地分支推送到某个命名不同的远程分支：若想把远程分支叫作 awesomebranch，可以用</p>
+<p>推送数据<code>git push origin serverfix:awesomebranch</code></p>
+<p>推送删除远程分支 git push [远程名] :[分支名]   （如果省略 [本地分支]，那就等于是在说“在这里提取空白然后把它变成[远程分支]”）</p>
+<p>例如git push origin :serverfix</p>
+<h2 id="tag标签"><a href="#tag标签" class="headerlink" title="tag标签"></a>tag标签</h2><p>Git 使用的标签有两种类型：轻量级的（lightweight）和含附注的（annotated）。</p>
+<ul>
+<li><strong>轻量级标签</strong>, 就像是个不会变化的分支，实际上它就是个指向特定提交对象的引用。</li>
+<li><strong>附注标签</strong>，实际上是存储在仓库中的一个独立对象，它有自身的校验和信息，包含着标签的名字，电子邮件地址和日期，以及标签说明，标签本身也允许使用 GNU Privacy Guard (GPG) 来签署或验证。一般我们都建议使用含附注型的标签，以便保留相关信息；当然，如果只是临时性加注标签，或者不需要旁注额外信息，用轻量级标签也没问题。</li>
+</ul>
+<p><code>$ git tag</code>列显已有的标签 </p>
+<p><code>$ git tag -l &#39;v1.4.2.*&#39;</code>用特定的搜索模式列出符合条件的标签 </p>
+<p>创建轻量标签 git tag <name>用于新建一个标签，默认为HEAD，也可以指定一个commit id<br>例如指定commit id，为后期加注标签的：git tag v0.9 6d9ea3</name></p>
+<p>创建一个含附注类型的标签 git tag -a v1.4 -m ‘my version 1.4’ (用 -a （译注：取 annotated 的首字母）指定标签名字即可,-m 选项则指定了对应的标签说明，Git 会将此说明一同保存在标签对象中)</p>
+<p>用PGP签名标签  //git tag -s <tagname> -m “blablabla…”<br>查看相应标签的版本信息 git show <tagname><br>删除一个本地标签 //git tag -d <tagname></tagname></tagname></tagname></p>
+<p><code>git push origin [tagname]</code>分享标签到远端仓库<br><code>git push origin --tags</code>如果要一次推送所有本地新增的标签</p>
+<p><code>git push origin :refs/tags/&lt;tagname&gt;</code>删除一个远程标签,与删除远程仓库类似<br>可以简些为git push origin :<tagname> //只要命名不冲突，应该也是可以识别的</tagname></p>
+<h2 id="查看配置"><a href="#查看配置" class="headerlink" title="查看配置"></a>查看配置</h2><ul>
+<li>–local 默认级别: 只影响本仓库    <code>.git/config</code>  </li>
+<li>–global 中级别: 影响到所有当前用户的git仓库    <code>~/gitconfig</code> </li>
+<li><p>–local 高级别: 影响全系统的git仓库    <code>/etc/gitconfig</code> </p>
+<p><code>git config --list</code> 查看当前所有配置信息</p>
+</li>
+</ul>
+<p>直接查阅某个环境变量的设定，只要把特定的名字跟在后面即可， 例如<code>git config user.name</code></p>
+<h3 id="设置http代理"><a href="#设置http代理" class="headerlink" title="设置http代理"></a>设置http代理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启</span></span><br><span class="line">$ git config --global http.proxy http://10.5.3.9:80</span><br><span class="line">$ git config --global https.proxy https://10.5.3.9:80</span><br><span class="line"><span class="comment"># 取消</span></span><br><span class="line">$ git config --global --<span class="built_in">unset</span> http.proxy</span><br><span class="line">$ git config --global --<span class="built_in">unset</span> https.proxy</span><br></pre></td></tr></table></figure>
+<h2 id="github新建空仓库后的操作"><a href="#github新建空仓库后的操作" class="headerlink" title="github新建空仓库后的操作"></a>github新建空仓库后的操作</h2><p>1.要关联一个远程库，使用命令<br><code>$ git remote add origin git@server-name:path/repo-name.git</code><br>2.关联后，使用命令<code>$ git push -u origin master</code>[或者<code>$ git push --set-upstream origin master</code>]第一次推送master分支的所有内容；<br>(加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。<br>3.此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；</p>
+<h2 id="…or-create-a-new-repository-on-the-command-line"><a href="#…or-create-a-new-repository-on-the-command-line" class="headerlink" title="…or create a new repository on the command line"></a>…or create a new repository on the command line</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"# MyProject"</span> &gt;&gt; README.md</span><br><span class="line">git init </span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">"first commit"</span></span><br><span class="line">git remote add origin git@github.com:someone/MyProject.git</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<h2 id="…or-push-an-existing-repository-from-the-command-line"><a href="#…or-push-an-existing-repository-from-the-command-line" class="headerlink" title="…or push an existing repository from the command line"></a>…or push an existing repository from the command line</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@github.com:someone/MyProject.git</span><br><span class="line">push -u origin master</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/版本控制/" rel="tag"># 版本控制</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/html/vim/2018/08/19/vim简介.html" rel="prev" title="VIM简介">
+      <i class="fa fa-chevron-left"></i> VIM简介
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/html/git/2018/08/25/4-git命令实战.html" rel="next" title="4. Git命令实战">
+      4. Git命令实战 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#init"><span class="nav-number">1.</span> <span class="nav-text">init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#status"><span class="nav-number">2.</span> <span class="nav-text">status</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#add-跟踪新文件"><span class="nav-number">3.</span> <span class="nav-text">add 跟踪新文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rm-删除操作"><span class="nav-number">4.</span> <span class="nav-text">rm 删除操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mv操作"><span class="nav-number">5.</span> <span class="nav-text">mv操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#commit-提交"><span class="nav-number">6.</span> <span class="nav-text">commit 提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#log-查看提交历史"><span class="nav-number">7.</span> <span class="nav-text">log 查看提交历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reset"><span class="nav-number">8.</span> <span class="nav-text">reset</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-diff"><span class="nav-number">9.</span> <span class="nav-text">git diff</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#checkout-撤销-检出"><span class="nav-number">10.</span> <span class="nav-text">checkout 撤销/检出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#branch分支"><span class="nav-number">11.</span> <span class="nav-text">branch分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程仓库-分支"><span class="nav-number">12.</span> <span class="nav-text">远程仓库/分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fetch"><span class="nav-number">13.</span> <span class="nav-text">fetch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跟踪远程分支"><span class="nav-number">14.</span> <span class="nav-text">跟踪远程分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#合并远程分支"><span class="nav-number">14.1.</span> <span class="nav-text">合并远程分支</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tag标签"><span class="nav-number">15.</span> <span class="nav-text">tag标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看配置"><span class="nav-number">16.</span> <span class="nav-text">查看配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设置http代理"><span class="nav-number">16.1.</span> <span class="nav-text">设置http代理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#github新建空仓库后的操作"><span class="nav-number">17.</span> <span class="nav-text">github新建空仓库后的操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#…or-create-a-new-repository-on-the-command-line"><span class="nav-number">18.</span> <span class="nav-text">…or create a new repository on the command line</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#…or-push-an-existing-repository-from-the-command-line"><span class="nav-number">19.</span> <span class="nav-text">…or push an existing repository from the command line</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">leiTKai</p>
+  <div class="site-description" itemprop="description">personal website</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leiTKai</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
